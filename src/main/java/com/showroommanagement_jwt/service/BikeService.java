@@ -26,7 +26,7 @@ public class BikeService {
         return responseDTO;
     }
 
-    public ResponseDTO retrieveById(final Integer id) {
+    public ResponseDTO retrieveById(final String id) {
         if (this.bikeRepository.existsById(id)) {
             final ResponseDTO responseDTO = new ResponseDTO();
             responseDTO.setMessage(Constant.RETRIEVE);
@@ -47,7 +47,7 @@ public class BikeService {
     }
 
     @Transactional
-    public ResponseDTO updateById(final Integer id, final Bike bike) {
+    public ResponseDTO updateById(final String id, final Bike bike) {
         final Bike bikeObject = this.bikeRepository.findById(id).orElseThrow(() -> new BadRequestServiceAlertException(Constant.ID_DOES_NOT_EXIST));
         if (bike.getName() != null) {
             bikeObject.setName(bike.getName());
@@ -74,7 +74,7 @@ public class BikeService {
         return responseDTO;
     }
 
-    public ResponseDTO deleteById(final Integer id) {
+    public ResponseDTO deleteById(final String id) {
         if (id == null) {
             throw new BadRequestServiceAlertException(Constant.DATA_NULL);
         }

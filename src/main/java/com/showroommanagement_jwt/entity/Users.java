@@ -23,6 +23,7 @@ public class Users implements UserDetails {
     private Date createdAt;
     @UpdateTimestamp
     private Date updatedAt;
+    @Column(length = 255)
     @Enumerated(EnumType.STRING)
     private Authority authority;
 

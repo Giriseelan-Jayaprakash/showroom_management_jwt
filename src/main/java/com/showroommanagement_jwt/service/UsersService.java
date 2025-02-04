@@ -25,7 +25,7 @@ public class UsersService {
     private JWTService jwtService;
     @Autowired
     private UsersValidation usersValidation;
-    private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(12);
+    private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(12);
 
     public ResponseDTO createUser(final Users user) {
         if (!usersValidation.isValidEmail(user.getEmailId())) {
@@ -35,8 +35,9 @@ public class UsersService {
             throw new BadRequestServiceAlertException("Invalid Password format");
         }
         if (usersRepository.existsByEmailId(user.getEmailId())) {
-            throw new BadRequestServiceAlertException("User Already exists");
+            throw new BadRequestServiceAlertException("Account Already exists");
         }
+        user.setAuthority(user.getAuthority());
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         usersRepository.save(user);
         Map<String, Object> responseData = new HashMap<>();
@@ -44,9 +45,11 @@ public class UsersService {
         responseData.put("userName", user.getUserName());
         responseData.put("emailId", user.getEmailId());
         responseData.put("authority", user.getAuthority());
+        responseData.put("createdAt", user.getCreatedAt());
+        responseData.put("updatedAt", user.getUpdatedAt());
         ResponseDTO responseDTO = new ResponseDTO();
         responseDTO.setStatusCode(HttpStatus.CREATED.value());
-        responseDTO.setMessage("Created Successfully");
+//        responseDTO.setMessage("Created Successfully");
         responseDTO.setData(responseData);
         return responseDTO;
     }
@@ -73,6 +76,8 @@ public class UsersService {
             responseData.put("userName", storedUser.get().getUserName());
             responseData.put("emailId", storedUser.get().getEmailId());
             responseData.put("authority", storedUser.get().getAuthority());
+            responseData.put("createdAt", storedUser.get().getCreatedAt());
+            responseData.put("UpdatedAt", storedUser.get().getUpdatedAt());
             responseData.put("token", jwtService.generateToken(storedUser.get()));
             responseDTO.setStatusCode(HttpStatus.OK.value());
             responseDTO.setMessage("Login Successful");

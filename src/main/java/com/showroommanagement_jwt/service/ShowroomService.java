@@ -26,7 +26,7 @@ public class ShowroomService {
         return responseDTO;
     }
 
-    public ResponseDTO retrieveById(final Integer id) {
+    public ResponseDTO retrieveById(final String id) {
         if (this.showroomRepository.existsById(id)) {
             final ResponseDTO responseDTO = new ResponseDTO();
             responseDTO.setMessage(Constant.RETRIEVE);
@@ -47,7 +47,7 @@ public class ShowroomService {
     }
 
     @Transactional
-    public ResponseDTO updateById(final Showroom showroom, final Integer id) {
+    public ResponseDTO updateById(final Showroom showroom, final String id) {
         final Showroom showroomObject = this.showroomRepository.findById(id).orElseThrow(() -> new BadRequestServiceAlertException(Constant.ID_DOES_NOT_EXIST));
         if (showroom.getName() != null) {
             showroomObject.setName(showroom.getName());
@@ -68,7 +68,7 @@ public class ShowroomService {
         return responseDTO;
     }
 
-    public ResponseDTO deleteById(final Integer id) {
+    public ResponseDTO deleteById(final String id) {
         if (id == null) {
             throw new BadRequestServiceAlertException(Constant.DATA_NULL);
         }

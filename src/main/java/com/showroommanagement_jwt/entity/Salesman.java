@@ -6,9 +6,9 @@ import jakarta.persistence.*;
 @Table(name = "salesman")
 public class Salesman {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id")
-    private Integer id;
+    private String id;
     @Column(name = "name")
     private String name;
     @Column(name = "salary")
@@ -21,14 +21,14 @@ public class Salesman {
     private float contactNumber;
 
     @ManyToOne()
-    @JoinColumn(name = "showroom_id")
-    private Showroom showroom;
+    @JoinColumn(name = "sales_manager_id")
+    private SalesManager salesManager;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -72,11 +72,11 @@ public class Salesman {
         this.contactNumber = contactNumber;
     }
 
-    public Showroom getShowroom() {
-        return showroom;
+    public SalesManager getSalesManager() {
+        return salesManager;
     }
 
-    public void setShowroom(Showroom showroom) {
-        this.showroom = showroom;
+    public void setSalesManager(SalesManager salesManager) {
+        this.salesManager = salesManager;
     }
 }

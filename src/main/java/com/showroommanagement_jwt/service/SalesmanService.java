@@ -26,7 +26,7 @@ public class SalesmanService {
         return responseDTO;
     }
 
-    public ResponseDTO retrieveById(final Integer id) {
+    public ResponseDTO retrieveById(final String id) {
         if (this.salesmanRepository.existsById(id)) {
             final ResponseDTO responseDTO = new ResponseDTO();
             responseDTO.setMessage(Constant.RETRIEVE);
@@ -47,7 +47,7 @@ public class SalesmanService {
     }
 
     @Transactional
-    public ResponseDTO updateById(final Integer id, final Salesman salesman) {
+    public ResponseDTO updateById(final String id, final Salesman salesman) {
         final Salesman salesmanObject = this.salesmanRepository.findById(id).orElseThrow(() -> new BadRequestServiceAlertException(Constant.ID_DOES_NOT_EXIST));
         if (salesman.getName() != null) {
             salesmanObject.setName(salesman.getName());
@@ -64,8 +64,8 @@ public class SalesmanService {
         if (salesman.getSalary() != 0) {
             salesmanObject.setSalary(salesman.getSalary());
         }
-        if (salesman.getShowroom() != null) {
-            salesmanObject.setShowroom(salesman.getShowroom());
+        if (salesman.getSalesManager() != null) {
+            salesmanObject.setSalesManager(salesman.getSalesManager());
         }
         final ResponseDTO responseDTO = new ResponseDTO();
         responseDTO.setMessage(Constant.UPDATE);
@@ -75,7 +75,7 @@ public class SalesmanService {
     }
 
 
-    public ResponseDTO deleteById(final Integer id) {
+    public ResponseDTO deleteById(final String id) {
         if (id == null) {
             throw new BadRequestServiceAlertException(Constant.DATA_NULL);
         }

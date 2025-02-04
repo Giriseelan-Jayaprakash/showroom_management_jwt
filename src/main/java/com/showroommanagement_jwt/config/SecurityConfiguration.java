@@ -33,10 +33,21 @@ public class SecurityConfiguration {
                 .csrf(Customizer -> Customizer.disable())
 //                .authorizeHttpRequests(request -> request./*requestMatchers("/**").permitAll().*/anyRequest().authenticated()) // only authenticated person will be permited
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/api/v1/users/create-user").hasAnyAuthority("ROLE_ADMIN")
+                        .requestMatchers("/api/v1/users/create-sales-manager").hasAnyAuthority("ROLE_ADMIN")
+                        .requestMatchers("/api/v1/users/create-admin").permitAll()
+                        .requestMatchers("/api/v1/users/create-salesman").hasAnyAuthority("ROLE_ADMIN", "ROLE_SALES_MANAGER")
+                        .requestMatchers("/api/v1/users/create-customer").hasAnyAuthority("ROLE_ADMIN", "ROLE_SALES_MANAGER", "ROLE_SALESMAN")
+//                        .requestMatchers("/api/v1/users/create-user").hasAnyAuthority("ROLE_ADMIN")
                         .requestMatchers("/api/v1/users/login").permitAll()
                         .requestMatchers("/api/v1/admin/**").hasAnyAuthority("ROLE_ADMIN")
                         .requestMatchers("/api/v1/user/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+
+                        .requestMatchers("/api/v1/bike/**").permitAll()
+                        .requestMatchers("/api/v1/customer/**").hasAnyAuthority("ROLE_SALES_MANAGER", "ROLE_ADMIN,ROLE_SALESMAN")
+                        .requestMatchers("/api/v1/sales/**").hasAnyAuthority("ROLE_SALES_MANAGER", "ROLE_ADMIN,ROLE_SALESMAN")
+                        .requestMatchers("/api/v1/sales-manager/**").hasAnyAuthority("ROLE_SALES_MANAGER", "ROLE_ADMIN")
+                        .requestMatchers("/api/v1/salesman/**").hasAnyAuthority("ROLE_SALES_MANAGER", "ROLE_ADMIN", "ROLE_SALESMAN")
+                        .requestMatchers("/api/v1/showroom/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_SALES_MANAGER")
                         .anyRequest().authenticated())// to free up authentication
                 .formLogin(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults())

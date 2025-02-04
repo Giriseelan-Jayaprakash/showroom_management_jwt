@@ -8,9 +8,9 @@ import java.util.Date;
 @Table(name = "sales")
 public class Sales {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id")
-    private Integer id;
+    private String id;
     @Column(name = "sales_date")
     private Date salesDate;
     @Column(name = "sales_price")
@@ -24,11 +24,11 @@ public class Sales {
     @JoinColumn(name = "bike_id")
     private Bike bike;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

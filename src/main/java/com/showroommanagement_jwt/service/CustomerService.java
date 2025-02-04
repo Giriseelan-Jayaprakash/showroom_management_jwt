@@ -30,7 +30,7 @@ public class CustomerService {
         return responseDTO;
     }
 
-    public ResponseDTO retrieveById(final Integer id) {
+    public ResponseDTO retrieveById(final String id) {
         if (this.customerRepository.existsById(id)) {
             this.customerRepository.findById(id);
             final ResponseDTO responseDTO = new ResponseDTO();
@@ -56,8 +56,8 @@ public class CustomerService {
         List<CustomerDetailDTO> customerDetailDTOS = new ArrayList<>();
         for (Customer customer1 : customer) {
             CustomerDetailDTO customerDetailDTO = new CustomerDetailDTO();
-            customerDetailDTO.setBrand(customer1.getSalesman().getShowroom().getBrand());
-            customerDetailDTO.setCompanyName(customer1.getSalesman().getShowroom().getName());
+            customerDetailDTO.setBrand(customer1.getSalesman().getSalesManager().getShowroom().getBrand());
+            customerDetailDTO.setCompanyName(customer1.getSalesman().getSalesManager().getShowroom().getName());
             customerDetailDTO.setEmail(customer1.getEmail());
             customerDetailDTO.setAddress(customer1.getAddress());
             customerDetailDTO.setName(customer1.getName());
@@ -71,7 +71,7 @@ public class CustomerService {
     }
 
     @Transactional
-    public ResponseDTO updateById(final Integer id, final Customer customer) {
+    public ResponseDTO updateById(final String id, final Customer customer) {
         final Customer customerObject = this.customerRepository.findById(id).orElseThrow(() -> new BadRequestServiceAlertException(Constant.ID_DOES_NOT_EXIST));
         if (customer.getName() != null) {
             customerObject.setName(customer.getName());
@@ -95,7 +95,7 @@ public class CustomerService {
         return responseDTO;
     }
 
-    public ResponseDTO deleteById(final Integer id) {
+    public ResponseDTO deleteById(final String id) {
         if (id == null) {
             throw new BadRequestServiceAlertException(Constant.DATA_NULL);
         }

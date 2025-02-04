@@ -6,9 +6,9 @@ import jakarta.persistence.*;
 @Table(name = "sales_manager")
 public class SalesManager {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id")
-    private Integer id;
+    private String id;
     @Column(name = "name")
     private String name;
     @Column(name = "address")
@@ -16,11 +16,15 @@ public class SalesManager {
     @Column(name = "contact_number")
     private long contactNumber;
 
-    public Integer getId() {
+    @ManyToOne()
+    @JoinColumn(name = "showroom_id")
+    private Showroom showroom;
+
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -46,5 +50,13 @@ public class SalesManager {
 
     public void setContactNumber(long contactNumber) {
         this.contactNumber = contactNumber;
+    }
+
+    public Showroom getShowroom() {
+        return showroom;
+    }
+
+    public void setShowroom(Showroom showroom) {
+        this.showroom = showroom;
     }
 }

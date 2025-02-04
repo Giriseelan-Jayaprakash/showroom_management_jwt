@@ -30,7 +30,7 @@ public class SalesService {
         return responseDTO;
     }
 
-    public ResponseDTO retrieveById(final Integer id) {
+    public ResponseDTO retrieveById(final String id) {
         if (this.salesRepository.existsById(id)) {
             final ResponseDTO responseDTO = new ResponseDTO();
             responseDTO.setMessage(Constant.RETRIEVE);
@@ -56,9 +56,9 @@ public class SalesService {
         List<SaleDetailDTO> saleDetailDTOList = new ArrayList<>();
         for (Sales sales1 : sales) {
             SaleDetailDTO saleDetailDTO = new SaleDetailDTO();
-            saleDetailDTO.setShowroomName(sales1.getBike().getSalesman().getShowroom().getName());
-            saleDetailDTO.setShowroomBrand(sales1.getBike().getSalesman().getShowroom().getBrand());
-            saleDetailDTO.setSalesManagerName(sales1.getBike().getSalesman().getShowroom().getSalesManager().getName());
+            saleDetailDTO.setShowroomName(sales1.getBike().getSalesman().getSalesManager().getShowroom().getName());
+            saleDetailDTO.setShowroomBrand(sales1.getBike().getSalesman().getSalesManager().getShowroom().getBrand());
+            saleDetailDTO.setSalesManagerName(sales1.getBike().getSalesman().getSalesManager().getName());
             saleDetailDTO.setSalesmanName(sales1.getCustomer().getSalesman().getName());
             saleDetailDTO.setBikeName(sales1.getBike().getName());
             saleDetailDTO.setBikePrice(sales1.getBike().getPrice());
@@ -76,7 +76,7 @@ public class SalesService {
     }
 
     @Transactional
-    public ResponseDTO updateById(final Integer id, final Sales sales) {
+    public ResponseDTO updateById(final String id, final Sales sales) {
         final Sales salesObject = this.salesRepository.findById(id).orElseThrow(() -> new BadRequestServiceAlertException(Constant.ID_DOES_NOT_EXIST));
         if (sales.getSalesDate() != null) {
             salesObject.setSalesDate(sales.getSalesDate());
@@ -97,7 +97,7 @@ public class SalesService {
         return responseDTO;
     }
 
-    public ResponseDTO deleteById(final Integer id) {
+    public ResponseDTO deleteById(final String id) {
         if (id == null) {
             throw new BadRequestServiceAlertException(Constant.DATA_NULL);
         }

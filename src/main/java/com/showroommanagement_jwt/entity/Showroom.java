@@ -7,9 +7,9 @@ import jakarta.persistence.*;
 @Table(name = "showroom")
 public class Showroom {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id")
-    private Integer id;
+    private String id;
     @Column(name = "name")
     private String name;
     @Column(name = "brand")
@@ -18,10 +18,6 @@ public class Showroom {
     private String address;
     @Column(name = "contact_number")
     private long contactNumber;
-
-    @ManyToOne()
-    @JoinColumn(name = "sales_manager_id")
-    private SalesManager salesManager;
 
     public String getName() {
         return name;
@@ -55,19 +51,11 @@ public class Showroom {
         this.contactNumber = contactNumber;
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
-    }
-
-    public SalesManager getSalesManager() {
-        return salesManager;
-    }
-
-    public void setSalesManager(SalesManager salesManager) {
-        this.salesManager = salesManager;
     }
 }
