@@ -15,7 +15,7 @@ public class SalesController {
         this.salesService = salesService;
     }
 
-    @PreAuthorize("hasAuthority('ROLE_SALES_MANAGER','ROLE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ROLE_SALES_MANAGER','ROLE_ADMIN')")
     @PostMapping("/create")
     public ResponseDTO createSales(@RequestBody final Sales sales) {
         return this.salesService.createSales(sales);
@@ -26,25 +26,25 @@ public class SalesController {
         return this.salesService.retrieveById(id);
     }
 
-    @PreAuthorize("hasAuthority('ROLE_SALES_MANAGER','ROLE_ADMIN','ROLE_SALESMAN')")
+    @PreAuthorize("hasAnyAuthority('ROLE_SALES_MANAGER','ROLE_ADMIN','ROLE_SALESMAN')")
     @GetMapping("retrieve-all")
     public ResponseDTO retrieveAll() {
         return this.salesService.retrieveAll();
     }
 
-    @PreAuthorize("hasAuthority('ROLE_SALES_MANAGER','ROLE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ROLE_SALES_MANAGER','ROLE_ADMIN')")
     @GetMapping("/retrieve-byShowroom-BikeName")
     public ResponseDTO retrieveSalesByShowroomAndBikeName(@RequestParam final String showroomName, @RequestParam final String bikeName) {
         return this.salesService.retrieveSalesByShowroomAndBikeName(showroomName, bikeName);
     }
 
-    @PreAuthorize("hasAuthority('ROLE_SALES_MANAGER','ROLE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ROLE_SALES_MANAGER','ROLE_ADMIN')")
     @PutMapping("/update-id/{id}")
     public ResponseDTO updateById(@PathVariable("id") String id, @RequestBody final Sales sales) {
-        return (this.salesService.updateById(id, sales));
+        return this.salesService.updateById(id, sales);
     }
 
-    @PreAuthorize("hasAuthority('ROLE_SALES_MANAGER','ROLE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ROLE_SALES_MANAGER','ROLE_ADMIN')")
     @DeleteMapping("/delete-id/{id}")
     public ResponseDTO deleteById(@PathVariable("id") final String id) {
         return this.salesService.deleteById(id);

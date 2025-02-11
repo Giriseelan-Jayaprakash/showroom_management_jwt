@@ -5,6 +5,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -19,17 +20,32 @@ import java.util.function.Function;
 
 @Service
 public class JWTService {
-    public String generateToken(Users user) {
+    public Map<String, String> generateTokens(Users user) {
+        Map<String, String> tokens = new HashMap<>();
+        String accessToken = generateToken(user, false);
+        String refreshToken = generateToken(user, true);
+        tokens.put("accessToken", accessToken);
+        tokens.put("refreshToken", refreshToken);
+        return tokens;
+    }
+
+    public String generateToken(Users user, boolean isRefreshToken) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("emailId", user.getEmailId());
         claims.put("name", user.getUserName());
+        long expirationTime;
+        if (isRefreshToken) {
+            expirationTime = 1000L * 60 * 60 * 24 * 30;
+        } else {
+            expirationTime = 1000 * 60 * 30;
+        }
         return Jwts
                 .builder()
                 .claims()
                 .add(claims)
-                .subject(user.getId().toString())
+                .subject(user.getId())
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 600 * 60 * 30))
+                .expiration(new Date(System.currentTimeMillis() + expirationTime))
                 .and()
                 .signWith(getKey())
                 .compact();
@@ -42,6 +58,7 @@ public class JWTService {
             KeyGenerator keyGenerator = KeyGenerator.getInstance("HmacSHA256");
             SecretKey skey = keyGenerator.generateKey();
             secretkey = Base64.getEncoder().encodeToString(skey.getEncoded());
+//            System.err.println(secretkey);
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
@@ -62,11 +79,16 @@ public class JWTService {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parser()
-                .verifyWith(getKey())
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
+        try {
+            return Jwts.parser()
+                    .verifyWith(getKey())
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+        } catch (SignatureException exception) {
+            throw new SignatureException("Signature is mismatching in Token");
+        }
+
     }
 
     public boolean validateToken(String token, UserDetails userDetails) {

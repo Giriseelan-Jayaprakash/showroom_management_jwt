@@ -19,31 +19,19 @@ public class SalesManagerService {
 
     @Transactional
     public ResponseDTO createSalesManager(final SalesManager salesManager) {
-        final ResponseDTO responseDTO = new ResponseDTO();
-        responseDTO.setMessage(Constant.CREATE);
-        responseDTO.setStatusCode(HttpStatus.CREATED.value());
-        responseDTO.setData(this.salesManagerRepository.save(salesManager));
-        return responseDTO;
+        return new ResponseDTO(HttpStatus.CREATED.value(), Constant.CREATE, this.salesManagerRepository.save(salesManager));
     }
 
     public ResponseDTO retrieveById(final String id) {
         if (this.salesManagerRepository.existsById(id)) {
-            final ResponseDTO responseDTO = new ResponseDTO();
-            responseDTO.setMessage(Constant.RETRIEVE);
-            responseDTO.setStatusCode(HttpStatus.OK.value());
-            responseDTO.setData(this.salesManagerRepository.findById(id));
-            return responseDTO;
+            return new ResponseDTO(HttpStatus.OK.value(), Constant.RETRIEVE, this.salesManagerRepository.findById(id));
         } else {
             throw new BadRequestServiceAlertException(Constant.ID_DOES_NOT_EXIST);
         }
     }
 
     public ResponseDTO retrieveALl() {
-        final ResponseDTO responseDTO = new ResponseDTO();
-        responseDTO.setMessage(Constant.RETRIEVE);
-        responseDTO.setStatusCode(HttpStatus.OK.value());
-        responseDTO.setData(this.salesManagerRepository.findAll());
-        return responseDTO;
+        return new ResponseDTO(HttpStatus.OK.value(), Constant.RETRIEVE, this.salesManagerRepository.findAll());
     }
 
     @Transactional
@@ -58,14 +46,10 @@ public class SalesManagerService {
         if (salesManager.getContactNumber() != 0) {
             salesManagerObject.setContactNumber(salesManager.getContactNumber());
         }
-        if(salesManager.getShowroom()!=null){
+        if (salesManager.getShowroom() != null) {
             salesManagerObject.setShowroom(salesManager.getShowroom());
         }
-        final ResponseDTO responseDTO = new ResponseDTO();
-        responseDTO.setMessage(Constant.UPDATE);
-        responseDTO.setStatusCode(HttpStatus.OK.value());
-        responseDTO.setData(this.salesManagerRepository.save(salesManagerObject));
-        return responseDTO;
+        return new ResponseDTO(HttpStatus.OK.value(), Constant.UPDATE, this.salesManagerRepository.save(salesManagerObject));
     }
 
     public ResponseDTO deleteById(final String id) {
@@ -74,11 +58,7 @@ public class SalesManagerService {
         }
         if (this.salesManagerRepository.existsById(id)) {
             this.salesManagerRepository.deleteById(id);
-            final ResponseDTO responseDTO = new ResponseDTO();
-            responseDTO.setMessage(Constant.DELETE);
-            responseDTO.setStatusCode(HttpStatus.OK.value());
-            responseDTO.setData(Constant.REMOVE);
-            return responseDTO;
+            return new ResponseDTO(HttpStatus.OK.value(), Constant.DELETE, Constant.REMOVE);
         } else {
             throw new BadRequestServiceAlertException(Constant.ID_DOES_NOT_EXIST);
         }

@@ -3,7 +3,6 @@ package com.showroommanagement_jwt.controller;
 import com.showroommanagement_jwt.dto.ResponseDTO;
 import com.showroommanagement_jwt.entity.Showroom;
 import com.showroommanagement_jwt.service.ShowroomService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,9 +17,8 @@ public class ShowroomController {
 
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping("/create")
-    public ResponseEntity<ResponseDTO> createShowroom(@RequestBody final Showroom showroom) {
-        ResponseDTO responseDTO = this.showroomService.createShowroom(showroom);
-        return ResponseEntity.status(responseDTO.getStatusCode()).body(responseDTO);
+    public ResponseDTO createShowroom(@RequestBody final Showroom showroom) {
+        return this.showroomService.createShowroom(showroom);
     }
 
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")

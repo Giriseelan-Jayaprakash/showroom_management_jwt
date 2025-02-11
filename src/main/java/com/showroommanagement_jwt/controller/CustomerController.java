@@ -19,42 +19,36 @@ public class CustomerController {
 
     @PreAuthorize("hasAnyAuthority('ROLE_SALES_MANAGER','ROLE_ADMIN','ROLE_SALESMAN')")
     @PostMapping("/create")
-    public ResponseEntity<ResponseDTO> createCustomer(@RequestBody final Customer customer) {
-        ResponseDTO responseDTO = this.customerService.createCustomer(customer);
-        return ResponseEntity.status(responseDTO.getStatusCode()).body(responseDTO);
+    public ResponseDTO createCustomer(@RequestBody final Customer customer) {
+        return this.customerService.createCustomer(customer);
     }
 
     @GetMapping("/retrieve/{id}")
-    public ResponseEntity<ResponseDTO> retrieveById(@PathVariable("id") final String id) {
-        ResponseDTO responseDTO = this.customerService.retrieveById(id);
-        return ResponseEntity.status(responseDTO.getStatusCode()).body(responseDTO);
+    public ResponseDTO retrieveById(@PathVariable("id") final String id) {
+        return this.customerService.retrieveById(id);
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_SALES_MANAGER','ROLE_ADMIN','ROLE_SALESMAN')")
     @GetMapping("/retrieve")
-    public ResponseEntity<ResponseDTO> retrieveAll() {
-        ResponseDTO responseDTO = this.customerService.retrieveAll();
-        return ResponseEntity.status(responseDTO.getStatusCode()).body(responseDTO);
+    public ResponseDTO retrieveAll() {
+        return this.customerService.retrieveAll();
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_SALES_MANAGER','ROLE_ADMIN','ROLE_SALESMAN')")
     @GetMapping("/retrieve-all-customer")
-    public ResponseEntity<ResponseDTO> retrieveAllCustomerDetail() {
-        ResponseDTO responseDTO = this.customerService.retrieveAllCustomerDetail();
-        return ResponseEntity.status(responseDTO.getStatusCode()).body(responseDTO);
+    public ResponseDTO retrieveAllCustomerDetail() {
+        return this.customerService.retrieveAllCustomerDetail();
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_SALES_MANAGER','ROLE_ADMIN')")
     @PutMapping("/update-id/{id}")
-    public ResponseEntity<ResponseDTO> updateById(@PathVariable("id") final String id, @RequestBody final Customer customer) {
-        ResponseDTO responseDTO = this.customerService.updateById(id, customer);
-        return ResponseEntity.status(responseDTO.getStatusCode()).body(responseDTO);
+    public ResponseDTO updateById(@PathVariable("id") final String id, @RequestBody final Customer customer) {
+        return this.customerService.updateById(id, customer);
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_SALES_MANAGER','ROLE_ADMIN')")
     @DeleteMapping("/delete-id/{id}")
-    public ResponseEntity<ResponseDTO> deleteById(@PathVariable("id") final String id) {
-        ResponseDTO responseDTO = this.customerService.deleteById(id);
-        return ResponseEntity.status(responseDTO.getStatusCode()).body(responseDTO);
+    public ResponseDTO deleteById(@PathVariable("id") final String id) {
+        return this.customerService.deleteById(id);
     }
 }

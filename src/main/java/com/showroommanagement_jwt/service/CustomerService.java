@@ -23,32 +23,20 @@ public class CustomerService {
 
     @Transactional
     public ResponseDTO createCustomer(final Customer customer) {
-        final ResponseDTO responseDTO = new ResponseDTO();
-        responseDTO.setMessage(Constant.CREATE);
-        responseDTO.setStatusCode(HttpStatus.CREATED.value());
-        responseDTO.setData(this.customerRepository.save(customer));
-        return responseDTO;
+        return new ResponseDTO(HttpStatus.CREATED.value(), Constant.CREATE, this.customerRepository.save(customer));
     }
 
     public ResponseDTO retrieveById(final String id) {
         if (this.customerRepository.existsById(id)) {
             this.customerRepository.findById(id);
-            final ResponseDTO responseDTO = new ResponseDTO();
-            responseDTO.setMessage(Constant.RETRIEVE);
-            responseDTO.setStatusCode(HttpStatus.OK.value());
-            responseDTO.setData(this.customerRepository.findById(id));
-            return responseDTO;
+            return new ResponseDTO(HttpStatus.OK.value(), Constant.RETRIEVE, this.customerRepository.findById(id));
         } else {
             throw new BadRequestServiceAlertException(Constant.ID_DOES_NOT_EXIST);
         }
     }
 
     public ResponseDTO retrieveAll() {
-        final ResponseDTO responseDTO = new ResponseDTO();
-        responseDTO.setMessage(Constant.RETRIEVE);
-        responseDTO.setStatusCode(HttpStatus.OK.value());
-        responseDTO.setData(this.customerRepository.findAll());
-        return responseDTO;
+        return new ResponseDTO(HttpStatus.OK.value(), Constant.RETRIEVE, this.customerRepository.findAll());
     }
 
     public ResponseDTO retrieveAllCustomerDetail() {
@@ -63,11 +51,7 @@ public class CustomerService {
             customerDetailDTO.setName(customer1.getName());
             customerDetailDTOS.add(customerDetailDTO);
         }
-        final ResponseDTO responseDTO = new ResponseDTO();
-        responseDTO.setMessage(Constant.RETRIEVE);
-        responseDTO.setStatusCode(HttpStatus.OK.value());
-        responseDTO.setData(customerDetailDTOS);
-        return responseDTO;
+        return new ResponseDTO(HttpStatus.OK.value(), Constant.RETRIEVE, customerDetailDTOS);
     }
 
     @Transactional
@@ -88,11 +72,7 @@ public class CustomerService {
         if (customer.getSalesman() != null) {
             customerObject.setSalesman(customer.getSalesman());
         }
-        final ResponseDTO responseDTO = new ResponseDTO();
-        responseDTO.setMessage(Constant.UPDATE);
-        responseDTO.setStatusCode(HttpStatus.OK.value());
-        responseDTO.setData(customerRepository.save(customerObject));
-        return responseDTO;
+        return new ResponseDTO(HttpStatus.OK.value(), Constant.UPDATE, customerRepository.save(customerObject));
     }
 
     public ResponseDTO deleteById(final String id) {
@@ -100,11 +80,7 @@ public class CustomerService {
             throw new BadRequestServiceAlertException(Constant.DATA_NULL);
         }
         if (this.customerRepository.existsById(id)) {
-            final ResponseDTO responseDTO = new ResponseDTO();
-            responseDTO.setMessage(Constant.DELETE);
-            responseDTO.setStatusCode(HttpStatus.OK.value());
-            responseDTO.setData(Constant.REMOVE);
-            return responseDTO;
+            return new ResponseDTO(HttpStatus.OK.value(), Constant.DELETE, Constant.REMOVE);
         } else {
             throw new BadRequestServiceAlertException(Constant.ID_DOES_NOT_EXIST);
         }

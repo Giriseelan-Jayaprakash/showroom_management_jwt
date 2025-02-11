@@ -15,7 +15,7 @@ public class BikeController {
         this.bikeService = bikeService;
     }
 
-    @PreAuthorize("hasAuthority('ROLE_SALES_MANAGER','ROLE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ROLE_SALES_MANAGER','ROLE_ADMIN')")
     @PostMapping("/create")
     public ResponseDTO createBike(@RequestBody final Bike bike) {
         return this.bikeService.createBike(bike);
@@ -31,13 +31,13 @@ public class BikeController {
         return this.bikeService.retrieveAll();
     }
 
-    @PreAuthorize("hasAuthority('ROLE_SALES_MANAGER','ROLE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ROLE_SALES_MANAGER','ROLE_ADMIN')")
     @PutMapping("/update-id/{id}")
     public ResponseDTO updateById(@PathVariable("id") final String id, @RequestBody Bike bike) {
         return this.bikeService.updateById(id, bike);
     }
 
-    @PreAuthorize("hasAuthority('ROLE_SALES_MANAGER','ROLE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ROLE_SALES_MANAGER','ROLE_ADMIN')")
     @DeleteMapping("/delete-id/{id}")
     public ResponseDTO deleteById(@PathVariable("id") final String id) {
         return this.bikeService.deleteById(id);

@@ -19,31 +19,19 @@ public class BikeService {
 
     @Transactional
     public ResponseDTO createBike(final Bike bike) {
-        final ResponseDTO responseDTO = new ResponseDTO();
-        responseDTO.setMessage(Constant.CREATE);
-        responseDTO.setStatusCode(HttpStatus.CREATED.value());
-        responseDTO.setData(this.bikeRepository.save(bike));
-        return responseDTO;
+        return new ResponseDTO(HttpStatus.CREATED.value(), Constant.CREATE, this.bikeRepository.save(bike));
     }
 
     public ResponseDTO retrieveById(final String id) {
         if (this.bikeRepository.existsById(id)) {
-            final ResponseDTO responseDTO = new ResponseDTO();
-            responseDTO.setMessage(Constant.RETRIEVE);
-            responseDTO.setStatusCode(HttpStatus.OK.value());
-            responseDTO.setData(this.bikeRepository.findById(id));
-            return responseDTO;
+            return new ResponseDTO(HttpStatus.OK.value(), Constant.RETRIEVE, this.bikeRepository.findById(id));
         } else {
             throw new BadRequestServiceAlertException(Constant.ID_DOES_NOT_EXIST);
         }
     }
 
     public ResponseDTO retrieveAll() {
-        final ResponseDTO responseDTO = new ResponseDTO();
-        responseDTO.setMessage(Constant.RETRIEVE);
-        responseDTO.setStatusCode(HttpStatus.OK.value());
-        responseDTO.setData(this.bikeRepository.findAll());
-        return responseDTO;
+        return new ResponseDTO(HttpStatus.OK.value(), Constant.RETRIEVE, this.bikeRepository.findAll());
     }
 
     @Transactional
@@ -67,11 +55,7 @@ public class BikeService {
         if (bike.getSalesman() != null) {
             bikeObject.setSalesman(bike.getSalesman());
         }
-        final ResponseDTO responseDTO = new ResponseDTO();
-        responseDTO.setMessage(Constant.UPDATE);
-        responseDTO.setStatusCode(HttpStatus.OK.value());
-        responseDTO.setData(bikeRepository.save(bikeObject));
-        return responseDTO;
+        return new ResponseDTO(HttpStatus.OK.value(), Constant.UPDATE, bikeRepository.save(bikeObject));
     }
 
     public ResponseDTO deleteById(final String id) {
@@ -80,11 +64,7 @@ public class BikeService {
         }
         if (this.bikeRepository.existsById(id)) {
             this.bikeRepository.deleteById(id);
-            final ResponseDTO responseDTO = new ResponseDTO();
-            responseDTO.setMessage(Constant.DELETE);
-            responseDTO.setStatusCode(HttpStatus.OK.value());
-            responseDTO.setData(Constant.REMOVE);
-            return responseDTO;
+            return new ResponseDTO(HttpStatus.OK.value(), Constant.DELETE, Constant.REMOVE);
         } else {
             throw new BadRequestServiceAlertException(Constant.ID_DOES_NOT_EXIST);
         }

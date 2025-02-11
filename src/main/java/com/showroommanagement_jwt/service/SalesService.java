@@ -23,20 +23,12 @@ public class SalesService {
 
     @Transactional
     public ResponseDTO createSales(final Sales sales) {
-        final ResponseDTO responseDTO = new ResponseDTO();
-        responseDTO.setMessage(Constant.CREATE);
-        responseDTO.setStatusCode(HttpStatus.CREATED.value());
-        responseDTO.setData(this.salesRepository.save(sales));
-        return responseDTO;
+        return new ResponseDTO(HttpStatus.CREATED.value(), Constant.CREATE, this.salesRepository.save(sales));
     }
 
     public ResponseDTO retrieveById(final String id) {
         if (this.salesRepository.existsById(id)) {
-            final ResponseDTO responseDTO = new ResponseDTO();
-            responseDTO.setMessage(Constant.RETRIEVE);
-            responseDTO.setStatusCode(HttpStatus.OK.value());
-            responseDTO.setData(this.salesRepository.findById(id));
-            return responseDTO;
+            return new ResponseDTO(HttpStatus.OK.value(), Constant.RETRIEVE, this.salesRepository.findById(id));
         } else {
             throw new BadRequestServiceAlertException(Constant.ID_DOES_NOT_EXIST);
         }
@@ -44,11 +36,7 @@ public class SalesService {
     }
 
     public ResponseDTO retrieveAll() {
-        final ResponseDTO responseDTO = new ResponseDTO();
-        responseDTO.setMessage(Constant.RETRIEVE);
-        responseDTO.setStatusCode(HttpStatus.OK.value());
-        responseDTO.setData(this.salesRepository.findAll());
-        return responseDTO;
+        return new ResponseDTO(HttpStatus.OK.value(), Constant.RETRIEVE, this.salesRepository.findAll());
     }
 
     public ResponseDTO retrieveSalesByShowroomAndBikeName(final String showroomName, final String bikeName) {
@@ -68,11 +56,7 @@ public class SalesService {
             saleDetailDTO.setSalesDate(sales1.getSalesDate());
             saleDetailDTOList.add(saleDetailDTO);
         }
-        final ResponseDTO responseDTO = new ResponseDTO();
-        responseDTO.setMessage(Constant.RETRIEVE);
-        responseDTO.setStatusCode(HttpStatus.OK.value());
-        responseDTO.setData(saleDetailDTOList);
-        return responseDTO;
+        return new ResponseDTO(HttpStatus.OK.value(), Constant.RETRIEVE, saleDetailDTOList);
     }
 
     @Transactional
@@ -90,11 +74,7 @@ public class SalesService {
         if (sales.getBike() != null) {
             salesObject.setBike(sales.getBike());
         }
-        final ResponseDTO responseDTO = new ResponseDTO();
-        responseDTO.setMessage(Constant.UPDATE);
-        responseDTO.setStatusCode(HttpStatus.OK.value());
-        responseDTO.setData(this.salesRepository.save(salesObject));
-        return responseDTO;
+        return new ResponseDTO(HttpStatus.OK.value(), Constant.UPDATE, this.salesRepository.save(salesObject));
     }
 
     public ResponseDTO deleteById(final String id) {
@@ -103,11 +83,7 @@ public class SalesService {
         }
         if (this.salesRepository.existsById(id)) {
             this.salesRepository.deleteById(id);
-            final ResponseDTO responseDTO = new ResponseDTO();
-            responseDTO.setMessage(Constant.DELETE);
-            responseDTO.setStatusCode(HttpStatus.OK.value());
-            responseDTO.setData(Constant.REMOVE);
-            return responseDTO;
+            return new ResponseDTO(HttpStatus.OK.value(), Constant.DELETE, Constant.REMOVE);
         } else {
             throw new BadRequestServiceAlertException(Constant.ID_DOES_NOT_EXIST);
         }

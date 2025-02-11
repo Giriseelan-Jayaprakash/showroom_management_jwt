@@ -19,31 +19,19 @@ public class SalesmanService {
 
     @Transactional
     public ResponseDTO createSalesman(final Salesman salesman) {
-        final ResponseDTO responseDTO = new ResponseDTO();
-        responseDTO.setMessage(Constant.CREATE);
-        responseDTO.setStatusCode(HttpStatus.CREATED.value());
-        responseDTO.setData(this.salesmanRepository.save(salesman));
-        return responseDTO;
+        return new ResponseDTO(HttpStatus.CREATED.value(), Constant.CREATE, this.salesmanRepository.save(salesman));
     }
 
     public ResponseDTO retrieveById(final String id) {
         if (this.salesmanRepository.existsById(id)) {
-            final ResponseDTO responseDTO = new ResponseDTO();
-            responseDTO.setMessage(Constant.RETRIEVE);
-            responseDTO.setStatusCode(HttpStatus.OK.value());
-            responseDTO.setData(this.salesmanRepository.findById(id));
-            return responseDTO;
+            return new ResponseDTO(HttpStatus.OK.value(), Constant.RETRIEVE, this.salesmanRepository.findById(id));
         } else {
             throw new BadRequestServiceAlertException(Constant.ID_DOES_NOT_EXIST);
         }
     }
 
     public ResponseDTO retrieveAll() {
-        final ResponseDTO responseDTO = new ResponseDTO();
-        responseDTO.setMessage(Constant.RETRIEVE);
-        responseDTO.setStatusCode(HttpStatus.OK.value());
-        responseDTO.setData(this.salesmanRepository.findAll());
-        return responseDTO;
+        return new ResponseDTO(HttpStatus.OK.value(), Constant.RETRIEVE, this.salesmanRepository.findAll());
     }
 
     @Transactional
@@ -67,11 +55,7 @@ public class SalesmanService {
         if (salesman.getSalesManager() != null) {
             salesmanObject.setSalesManager(salesman.getSalesManager());
         }
-        final ResponseDTO responseDTO = new ResponseDTO();
-        responseDTO.setMessage(Constant.UPDATE);
-        responseDTO.setStatusCode(HttpStatus.OK.value());
-        responseDTO.setData(this.salesmanRepository.save(salesmanObject));
-        return responseDTO;
+        return new ResponseDTO(HttpStatus.OK.value(), Constant.UPDATE, this.salesmanRepository.save(salesmanObject));
     }
 
 
@@ -81,11 +65,7 @@ public class SalesmanService {
         }
         if (this.salesmanRepository.existsById(id)) {
             this.salesmanRepository.deleteById(id);
-            final ResponseDTO responseDTO = new ResponseDTO();
-            responseDTO.setMessage(Constant.DELETE);
-            responseDTO.setStatusCode(HttpStatus.OK.value());
-            responseDTO.setData(Constant.REMOVE);
-            return responseDTO;
+            return new ResponseDTO(HttpStatus.OK.value(), Constant.REMOVE, Constant.DELETE);
         } else {
             throw new BadRequestServiceAlertException(Constant.ID_DOES_NOT_EXIST);
         }

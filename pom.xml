@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com</groupId>
-	<artifactId>jwtsecurity</artifactId>
+	<artifactId>showroom_management_jwt</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>jwtsecurity</name>
+	<name>showroom_management_jwt</name>
 	<description>Spring Security for Spring Boot</description>
 	<url/>
 	<licenses>
