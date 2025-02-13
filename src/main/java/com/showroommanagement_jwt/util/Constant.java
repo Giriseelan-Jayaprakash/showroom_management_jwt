@@ -14,4 +14,5 @@ public class Constant {
     public static final String FOUND = "Data Found";
     public static final String NOT_FOUND = "Data Not Found";
     public static final String ID_DOES_NOT_EXIST = "ID Does not Exist";
+    public static final String UNAUTHORIZED = "UnAuthorized User";
 }

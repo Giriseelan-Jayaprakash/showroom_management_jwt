@@ -15,10 +15,21 @@ public class SalesManager {
     private String address;
     @Column(name = "contact_number")
     private long contactNumber;
-
     @ManyToOne()
     @JoinColumn(name = "showroom_id")
     private Showroom showroom;
+
+    public SalesManager() {
+
+    }
+
+    public SalesManager(String id, String name, String address, long contactNumber, Showroom showroom) {
+        this.id = id;
+        this.name = name;
+        this.address = address;
+        this.contactNumber = contactNumber;
+        this.showroom = showroom;
+    }
 
     public String getId() {
         return id;

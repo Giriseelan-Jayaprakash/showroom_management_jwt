@@ -3,6 +3,7 @@ package com.showroommanagement_jwt.controller;
 import com.showroommanagement_jwt.dto.ResponseDTO;
 import com.showroommanagement_jwt.entity.Bike;
 import com.showroommanagement_jwt.service.BikeService;
+import com.showroommanagement_jwt.util.UserCredentialVerification;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,9 +11,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/bike")
 public class BikeController {
     private final BikeService bikeService;
+    private final UserCredentialVerification userCredentialVerification;
 
-    public BikeController(BikeService bikeService) {
+    public BikeController(BikeService bikeService, UserCredentialVerification userCredentialVerification) {
         this.bikeService = bikeService;
+        this.userCredentialVerification = userCredentialVerification;
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_SALES_MANAGER','ROLE_ADMIN')")
@@ -34,6 +37,7 @@ public class BikeController {
     @PreAuthorize("hasAnyAuthority('ROLE_SALES_MANAGER','ROLE_ADMIN')")
     @PutMapping("/update-id/{id}")
     public ResponseDTO updateById(@PathVariable("id") final String id, @RequestBody Bike bike) {
+        System.err.println(userCredentialVerification.userInfo());
         return this.bikeService.updateById(id, bike);
     }
 

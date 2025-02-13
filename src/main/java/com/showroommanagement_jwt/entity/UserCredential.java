@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-public class Users implements UserDetails {
+public class UserCredential implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
@@ -26,6 +26,19 @@ public class Users implements UserDetails {
     @Column(length = 255)
     @Enumerated(EnumType.STRING)
     private Authority authority;
+
+    public UserCredential() {
+    }
+
+    public UserCredential(String id, String userName, String emailId, String password, Date createdAt, Date updatedAt, Authority authority) {
+        this.id = id;
+        this.userName = userName;
+        this.emailId = emailId;
+        this.password = password;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.authority = authority;
+    }
 
     public String getId() {
         return id;

@@ -1,6 +1,6 @@
 package com.showroommanagement_jwt.service;
 
-import com.showroommanagement_jwt.entity.Users;
+import com.showroommanagement_jwt.entity.UserCredential;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -20,7 +20,7 @@ import java.util.function.Function;
 
 @Service
 public class JWTService {
-    public Map<String, String> generateTokens(Users user) {
+    public Map<String, String> generateTokens(UserCredential user) {
         Map<String, String> tokens = new HashMap<>();
         String accessToken = generateToken(user, false);
         String refreshToken = generateToken(user, true);
@@ -29,7 +29,7 @@ public class JWTService {
         return tokens;
     }
 
-    public String generateToken(Users user, boolean isRefreshToken) {
+    public String generateToken(UserCredential user, boolean isRefreshToken) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("emailId", user.getEmailId());
         claims.put("name", user.getUserName());
@@ -58,7 +58,6 @@ public class JWTService {
             KeyGenerator keyGenerator = KeyGenerator.getInstance("HmacSHA256");
             SecretKey skey = keyGenerator.generateKey();
             secretkey = Base64.getEncoder().encodeToString(skey.getEncoded());
-//            System.err.println(secretkey);
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }

@@ -16,6 +16,17 @@ public class Sales {
     @Column(name = "sales_price")
     private double salesPrice;
 
+    public Sales() {
+    }
+
+    public Sales(String id, Date salesDate, double salesPrice, Customer customer, Bike bike) {
+        this.id = id;
+        this.salesDate = salesDate;
+        this.salesPrice = salesPrice;
+        this.customer = customer;
+        this.bike = bike;
+    }
+
     @ManyToOne()
     @JoinColumn(name = "customer_id")
     private Customer customer;

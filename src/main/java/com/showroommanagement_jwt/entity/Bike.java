@@ -20,6 +20,19 @@ public class Bike {
     @Column(name = "stock")
     private String stock;
 
+    public Bike() {
+    }
+
+    public Bike(String id, String name, float cc, float mileage, float price, String stock, Salesman salesman) {
+        this.id = id;
+        this.name = name;
+        this.cc = cc;
+        this.mileage = mileage;
+        this.price = price;
+        this.stock = stock;
+        this.salesman = salesman;
+    }
+
     @ManyToOne()
     @JoinColumn(name = "salesman_id")
     private Salesman salesman;

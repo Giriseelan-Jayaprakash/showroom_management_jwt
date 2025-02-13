@@ -18,6 +18,18 @@ public class Customer {
     @Column(name = "contact_number")
     private long contactNumber;
 
+    public Customer() {
+    }
+
+    public Customer(String id, String name, String email, String address, long contactNumber, Salesman salesman) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.address = address;
+        this.contactNumber = contactNumber;
+        this.salesman = salesman;
+    }
+
     @ManyToOne()
     @JoinColumn(name = "salesman_id")
     private Salesman salesman;

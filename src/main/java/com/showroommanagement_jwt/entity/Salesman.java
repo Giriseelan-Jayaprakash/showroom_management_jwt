@@ -20,6 +20,19 @@ public class Salesman {
     @Column(name = "contact_number")
     private float contactNumber;
 
+    public Salesman() {
+    }
+
+    public Salesman(String id, String name, double salary, float experience, String address, float contactNumber, SalesManager salesManager) {
+        this.id = id;
+        this.name = name;
+        this.salary = salary;
+        this.experience = experience;
+        this.address = address;
+        this.contactNumber = contactNumber;
+        this.salesManager = salesManager;
+    }
+
     @ManyToOne()
     @JoinColumn(name = "sales_manager_id")
     private SalesManager salesManager;
