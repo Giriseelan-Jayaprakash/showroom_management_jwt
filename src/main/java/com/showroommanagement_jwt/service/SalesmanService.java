@@ -1,13 +1,12 @@
 package com.showroommanagement_jwt.service;
 
-import com.showroommanagement_jwt.dto.ResponseDTO;
 import com.showroommanagement_jwt.entity.Salesman;
-import com.showroommanagement_jwt.exception.BadRequestServiceAlertException;
+import com.showroommanagement_jwt.exception.UserNameNotFoundException;
 import com.showroommanagement_jwt.repository.SalesmanRepository;
 import com.showroommanagement_jwt.util.Constant;
-import jakarta.transaction.Transactional;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class SalesmanService {
@@ -17,33 +16,27 @@ public class SalesmanService {
         this.salesmanRepository = salesmanRepository;
     }
 
-    @Transactional
-    public ResponseDTO createSalesman(final Salesman salesman) {
-        return new ResponseDTO(HttpStatus.CREATED.value(), Constant.CREATE, this.salesmanRepository.save(salesman));
+    public Salesman createSalesman(final Salesman salesman) {
+        return this.salesmanRepository.save(salesman);
     }
 
-    public ResponseDTO retrieveById(final String id) {
-        if (this.salesmanRepository.existsById(id)) {
-            return new ResponseDTO(HttpStatus.OK.value(), Constant.RETRIEVE, this.salesmanRepository.findById(id));
-        } else {
-            throw new BadRequestServiceAlertException(Constant.ID_DOES_NOT_EXIST);
-        }
+    public Salesman retrieveById(final String id) {
+        return this.salesmanRepository.findById(id).orElseThrow(() -> new UserNameNotFoundException(Constant.ID_DOES_NOT_EXIST));
     }
 
-    public ResponseDTO retrieveAll() {
-        return new ResponseDTO(HttpStatus.OK.value(), Constant.RETRIEVE, this.salesmanRepository.findAll());
+    public List<Salesman> retrieveAll() {
+        return this.salesmanRepository.findAll();
     }
 
-    @Transactional
-    public ResponseDTO updateById(final String id, final Salesman salesman) {
-        final Salesman salesmanObject = this.salesmanRepository.findById(id).orElseThrow(() -> new BadRequestServiceAlertException(Constant.ID_DOES_NOT_EXIST));
+    public Salesman updateById(final String id, final Salesman salesman) {
+        final Salesman salesmanObject = this.salesmanRepository.findById(id).orElseThrow(() -> new UserNameNotFoundException(Constant.ID_DOES_NOT_EXIST));
         if (salesman.getName() != null) {
             salesmanObject.setName(salesman.getName());
         }
         if (salesman.getAddress() != null) {
             salesmanObject.setAddress(salesman.getAddress());
         }
-        if (salesman.getContactNumber() != 0) {
+        if (salesman.getContactNumber() != null) {
             salesmanObject.setContactNumber(salesman.getContactNumber());
         }
         if (salesman.getExperience() != 0) {
@@ -55,19 +48,13 @@ public class SalesmanService {
         if (salesman.getSalesManager() != null) {
             salesmanObject.setSalesManager(salesman.getSalesManager());
         }
-        return new ResponseDTO(HttpStatus.OK.value(), Constant.UPDATE, this.salesmanRepository.save(salesmanObject));
+        return this.salesmanRepository.save(salesmanObject);
     }
 
 
-    public ResponseDTO deleteById(final String id) {
-        if (id == null) {
-            throw new BadRequestServiceAlertException(Constant.DATA_NULL);
-        }
-        if (this.salesmanRepository.existsById(id)) {
-            this.salesmanRepository.deleteById(id);
-            return new ResponseDTO(HttpStatus.OK.value(), Constant.REMOVE, Constant.DELETE);
-        } else {
-            throw new BadRequestServiceAlertException(Constant.ID_DOES_NOT_EXIST);
-        }
+    public String deleteById(final String id) {
+        final Salesman salesman = this.salesmanRepository.findById(id).orElseThrow(() -> new UserNameNotFoundException("Salesman not found for this id : " + id));
+        this.salesmanRepository.delete(salesman);
+        return Constant.REMOVE;
     }
 }

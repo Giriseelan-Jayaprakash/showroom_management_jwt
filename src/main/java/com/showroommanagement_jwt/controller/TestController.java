@@ -1,7 +1,6 @@
 package com.showroommanagement_jwt.controller;
 
-import com.showroommanagement_jwt.entity.UserCredential;
-import org.springframework.security.access.prepost.PreAuthorize;
+import com.showroommanagement_jwt.entity.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,11 +10,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/users")
 public class TestController {
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+
     @PostMapping("/create-user")
-    public UserCredential print() {
+    public User print() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Object principal = authentication.getPrincipal();
-        return (UserCredential) principal;
+        return (User) principal;
     }
 }

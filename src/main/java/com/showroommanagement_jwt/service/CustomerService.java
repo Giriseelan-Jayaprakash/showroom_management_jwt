@@ -1,13 +1,11 @@
 package com.showroommanagement_jwt.service;
 
 import com.showroommanagement_jwt.dto.CustomerDetailDTO;
-import com.showroommanagement_jwt.dto.ResponseDTO;
 import com.showroommanagement_jwt.entity.Customer;
 import com.showroommanagement_jwt.exception.BadRequestServiceAlertException;
+import com.showroommanagement_jwt.exception.UserNameNotFoundException;
 import com.showroommanagement_jwt.repository.CustomerRepository;
 import com.showroommanagement_jwt.util.Constant;
-import jakarta.transaction.Transactional;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,25 +19,20 @@ public class CustomerService {
         this.customerRepository = customerRepository;
     }
 
-    @Transactional
-    public ResponseDTO createCustomer(final Customer customer) {
-        return new ResponseDTO(HttpStatus.CREATED.value(), Constant.CREATE, this.customerRepository.save(customer));
+    public Customer createCustomer(final Customer customer) {
+        return this.customerRepository.save(customer);
     }
 
-    public ResponseDTO retrieveById(final String id) {
-        if (this.customerRepository.existsById(id)) {
-            this.customerRepository.findById(id);
-            return new ResponseDTO(HttpStatus.OK.value(), Constant.RETRIEVE, this.customerRepository.findById(id));
-        } else {
-            throw new BadRequestServiceAlertException(Constant.ID_DOES_NOT_EXIST);
-        }
+    public Customer retrieveById(final String id) {
+        return this.customerRepository.findById(id).orElseThrow(() -> new UserNameNotFoundException(Constant.ID_DOES_NOT_EXIST));
+
     }
 
-    public ResponseDTO retrieveAll() {
-        return new ResponseDTO(HttpStatus.OK.value(), Constant.RETRIEVE, this.customerRepository.findAll());
+    public List<Customer> retrieveAll() {
+        return this.customerRepository.findAll();
     }
 
-    public ResponseDTO retrieveAllCustomerDetail() {
+    public List<CustomerDetailDTO> retrieveAllCustomerDetail() {
         List<Customer> customer = this.customerRepository.findAll();
         List<CustomerDetailDTO> customerDetailDTOS = new ArrayList<>();
         for (Customer customer1 : customer) {
@@ -51,11 +44,10 @@ public class CustomerService {
             customerDetailDTO.setName(customer1.getName());
             customerDetailDTOS.add(customerDetailDTO);
         }
-        return new ResponseDTO(HttpStatus.OK.value(), Constant.RETRIEVE, customerDetailDTOS);
+        return customerDetailDTOS;
     }
 
-    @Transactional
-    public ResponseDTO updateById(final String id, final Customer customer) {
+    public Customer updateById(final String id, final Customer customer) {
         final Customer customerObject = this.customerRepository.findById(id).orElseThrow(() -> new BadRequestServiceAlertException(Constant.ID_DOES_NOT_EXIST));
         if (customer.getName() != null) {
             customerObject.setName(customer.getName());
@@ -72,17 +64,12 @@ public class CustomerService {
         if (customer.getSalesman() != null) {
             customerObject.setSalesman(customer.getSalesman());
         }
-        return new ResponseDTO(HttpStatus.OK.value(), Constant.UPDATE, customerRepository.save(customerObject));
+        return this.customerRepository.save(customerObject);
     }
 
-    public ResponseDTO deleteById(final String id) {
-        if (id == null) {
-            throw new BadRequestServiceAlertException(Constant.DATA_NULL);
-        }
-        if (this.customerRepository.existsById(id)) {
-            return new ResponseDTO(HttpStatus.OK.value(), Constant.DELETE, Constant.REMOVE);
-        } else {
-            throw new BadRequestServiceAlertException(Constant.ID_DOES_NOT_EXIST);
-        }
+    public String deleteById(final String id) {
+        final Customer customer = this.customerRepository.findById(id).orElseThrow(() -> new UserNameNotFoundException("Customer not found for this id : " + id));
+        this.customerRepository.delete(customer);
+        return Constant.REMOVE;
     }
 }

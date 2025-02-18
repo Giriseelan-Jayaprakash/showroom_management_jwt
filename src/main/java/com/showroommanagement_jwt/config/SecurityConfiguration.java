@@ -13,7 +13,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -38,24 +37,9 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
 //                .authorizeHttpRequests(request -> request./*requestMatchers("/**").permitAll().*/anyRequest().authenticated()) // only authenticated person will be permited
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/api/v1/**").permitAll()
+                        .requestMatchers("/api/v1/user/login").permitAll()
+                        .requestMatchers("/api/v1/user/refresh-token").permitAll()
                         .requestMatchers("/actuator/health").permitAll()
-//                        .requestMatchers("/api/v1/users/create-sales-manager").hasAnyAuthority("ROLE_ADMIN")
-//                        .requestMatchers("/api/v1/users/create-admin").permitAll()
-//                        .requestMatchers("/api/v1/users/create-salesman").hasAnyAuthority("ROLE_ADMIN", "ROLE_SALES_MANAGER")
-//                        .requestMatchers("/api/v1/users/create-customer").hasAnyAuthority("ROLE_ADMIN", "ROLE_SALES_MANAGER", "ROLE_SALESMAN")
-//                        .requestMatchers("/api/v1/users/refresh-token").permitAll()
-//                        .requestMatchers("/api/v1/users/login").permitAll()
-//                        .requestMatchers("/api/v1/users/**").permitAll()
-//                        .requestMatchers("/api/v1/admin/**").hasAnyAuthority("ROLE_ADMIN")
-//                        .requestMatchers("/api/v1/user/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
-//
-//                        .requestMatchers("/api/v1/bike/**").permitAll()
-//                        .requestMatchers("/api/v1/customer/**").hasAnyAuthority("ROLE_SALES_MANAGER", "ROLE_ADMIN,ROLE_SALESMAN")
-//                        .requestMatchers("/api/v1/sales/**").hasAnyAuthority("ROLE_SALES_MANAGER", "ROLE_ADMIN,ROLE_SALESMAN")
-//                        .requestMatchers("/api/v1/sales-manager/**").hasAnyAuthority("ROLE_SALES_MANAGER", "ROLE_ADMIN")
-//                        .requestMatchers("/api/v1/salesman/**").hasAnyAuthority("ROLE_SALES_MANAGER", "ROLE_ADMIN", "ROLE_SALESMAN")
-//                        .requestMatchers("/api/v1/showroom/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_SALES_MANAGER")
                         .anyRequest().authenticated())
                 .formLogin(Customizer.withDefaults()) // to use form based login for in-build
                 .httpBasic(Customizer.withDefaults())
@@ -75,10 +59,6 @@ public class SecurityConfiguration {
     @Bean //using JWT
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
-    }
-    @Bean
-    public SecurityContextHolder securityContextHolder(){
-        return new SecurityContextHolder();
     }
 }
 

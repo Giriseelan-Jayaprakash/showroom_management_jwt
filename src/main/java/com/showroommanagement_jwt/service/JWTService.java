@@ -1,6 +1,6 @@
 package com.showroommanagement_jwt.service;
 
-import com.showroommanagement_jwt.entity.UserCredential;
+import com.showroommanagement_jwt.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -20,7 +20,7 @@ import java.util.function.Function;
 
 @Service
 public class JWTService {
-    public Map<String, String> generateTokens(UserCredential user) {
+    public Map<String, String> generateTokens(User user) {
         Map<String, String> tokens = new HashMap<>();
         String accessToken = generateToken(user, false);
         String refreshToken = generateToken(user, true);
@@ -29,7 +29,7 @@ public class JWTService {
         return tokens;
     }
 
-    public String generateToken(UserCredential user, boolean isRefreshToken) {
+    public String generateToken(User user, boolean isRefreshToken) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("emailId", user.getEmailId());
         claims.put("name", user.getUserName());
@@ -72,34 +72,52 @@ public class JWTService {
         return extractClaim(token, claims -> claims.get("emailId", String.class));
     }
 
-    private <T> T extractClaim(String token, Function<Claims, T> claimResolver) {
+    private <T> T extractClaim(final String token, final Function<Claims, T> claimResolver) {
         final Claims claims = extractAllClaims(token);
         return claimResolver.apply(claims);
     }
 
     private Claims extractAllClaims(String token) {
+
         try {
             return Jwts.parser()
                     .verifyWith(getKey())
                     .build()
                     .parseSignedClaims(token)
                     .getPayload();
-        } catch (SignatureException exception) {
-            throw new SignatureException("Signature is mismatching in Token");
+
+
+        } catch (SignatureException e) {
+            throw new RuntimeException("JWT signature verification failed");
+        } catch (Exception e) {
+            System.err.println("JWT validation error: " + e.getMessage());
+            throw new RuntimeException("JWT validation failed");
         }
-
+//        finally {
+//            throw new BadRequestServiceAlertException("Test exception");
+//        }
     }
 
-    public boolean validateToken(String token, UserDetails userDetails) {
+    public boolean validateToken(final String token, final UserDetails userDetails) {
         final String userName = extractUserName(token);
-        return (userName.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        return userName.equals(userDetails.getUsername()) && !isTokenExpired(token);
     }
 
-    private boolean isTokenExpired(String token) {
+    private boolean isTokenExpired(final String token) {
         return extractExpiration(token).before(new Date());
     }
 
-    private Date extractExpiration(String token) {
+    private Date extractExpiration(final String token) {
         return extractClaim(token, Claims::getExpiration);
     }
 }
+/*
+	public boolean isTokenValid(final String token,final UserDetails userDetails) {
+		final String username = extractUserName(token);
+		return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
+	}
+
+	private boolean isTokenExpired(final String token) {
+		return extractClaim(token, Claims::getExpiration).before(new Date());
+	}
+ */

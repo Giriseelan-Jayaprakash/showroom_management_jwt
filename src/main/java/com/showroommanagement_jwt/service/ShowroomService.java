@@ -1,13 +1,12 @@
 package com.showroommanagement_jwt.service;
 
-import com.showroommanagement_jwt.dto.ResponseDTO;
 import com.showroommanagement_jwt.entity.Showroom;
-import com.showroommanagement_jwt.exception.BadRequestServiceAlertException;
+import com.showroommanagement_jwt.exception.UserNameNotFoundException;
 import com.showroommanagement_jwt.repository.ShowroomRepository;
 import com.showroommanagement_jwt.util.Constant;
-import jakarta.transaction.Transactional;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ShowroomService {
@@ -17,26 +16,21 @@ public class ShowroomService {
         this.showroomRepository = showroomRepository;
     }
 
-    @Transactional
-    public ResponseDTO createShowroom(final Showroom showroom) {
-        return new ResponseDTO(HttpStatus.CREATED.value(), Constant.CREATE, this.showroomRepository.save(showroom));
+    public Showroom createShowroom(final Showroom showroom) {
+        return this.showroomRepository.save(showroom);
     }
 
-    public ResponseDTO retrieveById(final String id) {
-        if (this.showroomRepository.existsById(id)) {
-            return new ResponseDTO(HttpStatus.OK.value(), Constant.RETRIEVE, this.showroomRepository.findById(id));
-        } else {
-            throw new BadRequestServiceAlertException(Constant.ID_DOES_NOT_EXIST);
-        }
+    public Showroom retrieveById(final String id) {
+        return this.showroomRepository.findById(id).orElseThrow(() -> new UserNameNotFoundException(Constant.ID_DOES_NOT_EXIST));
+
     }
 
-    public ResponseDTO retrieveAll() {
-        return new ResponseDTO(HttpStatus.OK.value(), Constant.RETRIEVE, this.showroomRepository.findAll());
+    public List<Showroom> retrieveAll() {
+        return this.showroomRepository.findAll();
     }
 
-    @Transactional
-    public ResponseDTO updateById(final Showroom showroom, final String id) {
-        final Showroom showroomObject = this.showroomRepository.findById(id).orElseThrow(() -> new BadRequestServiceAlertException(Constant.ID_DOES_NOT_EXIST));
+    public Showroom updateById(final Showroom showroom, final String id) {
+        final Showroom showroomObject = this.showroomRepository.findById(id).orElseThrow(() -> new UserNameNotFoundException(Constant.ID_DOES_NOT_EXIST));
         if (showroom.getName() != null) {
             showroomObject.setName(showroom.getName());
         }
@@ -49,18 +43,12 @@ public class ShowroomService {
         if (showroom.getContactNumber() != 0) {
             showroomObject.setContactNumber(showroom.getContactNumber());
         }
-        return new ResponseDTO(HttpStatus.OK.value(), Constant.UPDATE, this.showroomRepository.save(showroomObject));
+        return this.showroomRepository.save(showroomObject);
     }
 
-    public ResponseDTO deleteById(final String id) {
-        if (id == null) {
-            throw new BadRequestServiceAlertException(Constant.DATA_NULL);
-        }
-        if (this.showroomRepository.existsById(id)) {
-            this.showroomRepository.deleteById(id);
-            return new ResponseDTO(HttpStatus.OK.value(), Constant.DELETE, Constant.REMOVE);
-        } else {
-            throw new BadRequestServiceAlertException(Constant.ID_DOES_NOT_EXIST);
-        }
+    public String deleteById(final String id) {
+        final Showroom showroom = this.showroomRepository.findById(id).orElseThrow(() -> new UserNameNotFoundException("Showroom not found for this id : " + id));
+        this.showroomRepository.delete(showroom);
+        return Constant.REMOVE;
     }
 }

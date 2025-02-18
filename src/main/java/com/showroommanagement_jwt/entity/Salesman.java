@@ -18,12 +18,12 @@ public class Salesman {
     @Column(name = "address")
     private String address;
     @Column(name = "contact_number")
-    private float contactNumber;
+    private Long contactNumber;
 
     public Salesman() {
     }
 
-    public Salesman(String id, String name, double salary, float experience, String address, float contactNumber, SalesManager salesManager) {
+    public Salesman(String id, String name, double salary, float experience, String address, Long contactNumber, SalesManager salesManager) {
         this.id = id;
         this.name = name;
         this.salary = salary;
@@ -77,11 +77,11 @@ public class Salesman {
         this.address = address;
     }
 
-    public float getContactNumber() {
+    public Long getContactNumber() {
         return contactNumber;
     }
 
-    public void setContactNumber(float contactNumber) {
+    public void setContactNumber(Long contactNumber) {
         this.contactNumber = contactNumber;
     }
 
